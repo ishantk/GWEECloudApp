@@ -56,14 +56,17 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
     ArrayAdapter<String> adapter;
 
-    GWEEUser user;
+    GWEEUser user,rcvUser;
 
     StringRequest request;
     RequestQueue requestQueue;
 
     String REGISTER_URL = "http://auribises.com/gwee/insert.php";
+    String UPDATE_URL = "http://auribises.com/gwee/update.php";
 
     ProgressDialog dialog;
+
+    boolean updateMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,34 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
         btnRegister.setOnClickListener(this);
         rbMale.setOnClickListener(this);
         rbFemale.setOnClickListener(this);
+
+
+        Intent rcv = getIntent();
+        updateMode = rcv.hasExtra("keyUser");
+
+        if(updateMode){
+            rcvUser = (GWEEUser) rcv.getSerializableExtra("keyUser");
+            eTxtName.setText(rcvUser.getName());
+            eTxtEmail.setText(rcvUser.getEmail());
+            eTxtPassword.setText(rcvUser.getPassword());
+
+            if(rcvUser.getGender().equals("Male")){
+                rbMale.setChecked(true);
+                rbFemale.setChecked(false);
+            }else{
+                rbMale.setChecked(false);
+                rbFemale.setChecked(true);
+            }
+
+            for(int i=0;i<adapter.getCount();i++){
+                if(adapter.getItem(i).equals(rcvUser.getCity())){
+                    spCity.setSelection(i);
+                    break;
+                }
+            }
+
+            btnRegister.setText("Update User");
+        }
     }
 
     @Override
@@ -131,9 +162,17 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
     void registerUser(){
 
+        String url = "";
+        if(updateMode)
+            url = UPDATE_URL;
+        else
+            url = REGISTER_URL;
+
         dialog.show();
 
-        request = new StringRequest(Request.Method.POST, REGISTER_URL,
+
+
+        request = new StringRequest(Request.Method.POST, url,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -144,7 +183,11 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                         String message = jsonObject.getString("message");
                         Toast.makeText(getApplicationContext(),message+" - "+success,Toast.LENGTH_LONG).show();
 
-                        clearFields();
+                        if(updateMode)
+                            finish();
+                        else
+                            clearFields();
+
                     }catch (Exception e){
                         Toast.makeText(getApplicationContext(),"Some Exception: "+e,Toast.LENGTH_LONG).show();
                     }
@@ -166,6 +209,10 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String,String> map = new HashMap<>();
+
+                if(updateMode){
+                    map.put("id",String.valueOf(rcvUser.getId()));
+                }
 
                 map.put("name",user.getName());
                 map.put("email",user.getEmail());

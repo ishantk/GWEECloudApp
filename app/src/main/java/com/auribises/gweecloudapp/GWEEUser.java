@@ -1,10 +1,12 @@
 package com.auribises.gweecloudapp;
 
+import java.io.Serializable;
+
 /**
  * Created by ishantkumar on 21/07/17.
  */
 
-public class GWEEUser {
+public class GWEEUser implements Serializable{
 
     int id;
     String name;
@@ -76,13 +78,11 @@ public class GWEEUser {
 
     @Override
     public String toString() {
-        return "GWEEUser{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", gender='" + gender + '\'' +
-                ", city='" + city + '\'' +
-                '}';
+        return "\nId: " + id +
+                "\n\nName: " + name +
+                "\n\nEmail: " + email +
+                "\n\nPassword: " + password +
+                "\n\nGender: " + gender +
+                "\n\nCity: " + city;
     }
 }
