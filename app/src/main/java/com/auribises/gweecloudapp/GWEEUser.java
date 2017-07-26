@@ -16,7 +16,12 @@ public class GWEEUser implements Serializable{
     String city;
 
     public GWEEUser(){
-
+        id = 0;
+        name = "";
+        email = "";
+        password = "";
+        gender = "";
+        city = "";
     }
 
     public GWEEUser(int id, String name, String email, String password, String gender, String city) {

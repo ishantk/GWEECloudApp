@@ -106,6 +106,12 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
         if(updateMode){
             rcvUser = (GWEEUser) rcv.getSerializableExtra("keyUser");
+
+            // set some default values in the user object
+            user.setId(rcvUser.getId());
+            user.setCity(rcvUser.getCity());
+            user.setGender(rcvUser.getGender());
+
             eTxtName.setText(rcvUser.getName());
             eTxtEmail.setText(rcvUser.getEmail());
             eTxtPassword.setText(rcvUser.getPassword());
@@ -141,7 +147,8 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                 user.setEmail(eTxtEmail.getText().toString().trim());
                 user.setPassword(eTxtPassword.getText().toString().trim());
 
-                registerUser();
+                if(validateFields())
+                    registerUser();
 
                 break;
 
@@ -183,10 +190,16 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                         String message = jsonObject.getString("message");
                         Toast.makeText(getApplicationContext(),message+" - "+success,Toast.LENGTH_LONG).show();
 
-                        if(updateMode)
+                        if(updateMode) {
+
+                            Intent data = new Intent();
+                            data.putExtra("updatedUser",user);
+                            setResult(201,data);
                             finish();
-                        else
+
+                        }else {
                             clearFields();
+                        }
 
                     }catch (Exception e){
                         Toast.makeText(getApplicationContext(),"Some Exception: "+e,Toast.LENGTH_LONG).show();
@@ -251,6 +264,50 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
         spCity.setSelection(0);
     }
+
+    boolean validateFields(){
+
+        boolean flag = true;
+
+        if(user.getName().isEmpty()){
+            eTxtName.setError("Please Enter Name");
+            flag = false;
+        }
+
+        if(user.getEmail().isEmpty()){
+            eTxtEmail.setError("Please Enter Email");
+            flag = false;
+        }else{
+            if(!user.getEmail().contains("@") && !user.getEmail().contains(".")){
+                eTxtEmail.setError("Please Enter Valid Email");
+                flag = false;
+            }
+        }
+
+        if(user.getPassword().isEmpty()){
+            eTxtPassword.setError("Please Enter Password");
+            flag = false;
+        }else{
+            if((user.getPassword().length()<6)) {
+                eTxtPassword.setError("Please Enter Password with 6 chars");
+                flag = false;
+            }
+        }
+
+        if(user.getGender().isEmpty()){
+            Toast.makeText(this,"Please select your gender",Toast.LENGTH_LONG).show();
+            flag = false;
+        }
+
+        if(user.getCity().isEmpty()){
+            Toast.makeText(this,"Please select your city",Toast.LENGTH_LONG).show();
+            flag = false;
+        }
+
+
+        return flag;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

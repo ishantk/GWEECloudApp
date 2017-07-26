@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,6 +38,9 @@ public class AllUsersActivity extends AppCompatActivity implements AdapterView.O
 
     @InjectView(R.id.listView)
     ListView listView;
+
+    @InjectView(R.id.editTextSearch)
+    EditText eTxtSearch;
 
     StringRequest request;
     RequestQueue requestQueue;
@@ -65,6 +72,8 @@ public class AllUsersActivity extends AppCompatActivity implements AdapterView.O
         dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Please Wait..");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         retrieveAllUsers();
 
@@ -115,6 +124,25 @@ public class AllUsersActivity extends AppCompatActivity implements AdapterView.O
                             userAdapter = new UserAdapter(getApplicationContext(),R.layout.list_item,userList);
                             listView.setAdapter(userAdapter);
                             listView.setOnItemClickListener(AllUsersActivity.this);
+
+
+                            eTxtSearch.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                    userAdapter.filter(charSequence.toString());
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable editable) {
+
+                                }
+                            });
+
                         }catch (Exception e){
                             Toast.makeText(getApplicationContext(),"Some Exception: "+e,Toast.LENGTH_LONG).show();
                             e.printStackTrace();
@@ -227,7 +255,8 @@ public class AllUsersActivity extends AppCompatActivity implements AdapterView.O
                     case 2:
                         Intent intent = new Intent(AllUsersActivity.this,RegisterUserActivity.class);
                         intent.putExtra("keyUser",user);
-                        startActivity(intent);
+                        //startActivity(intent);
+                        startActivityForResult(intent,101);
                         break;
                     case 3:
 
@@ -245,5 +274,24 @@ public class AllUsersActivity extends AppCompatActivity implements AdapterView.O
         pos = i;
         user = userList.get(i);
         showOptions();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 101 && resultCode == 201){
+            GWEEUser updatedUser = (GWEEUser)data.getSerializableExtra("updatedUser");
+            userList.set(pos,updatedUser); // Update the user on position clicked by us
+            userAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

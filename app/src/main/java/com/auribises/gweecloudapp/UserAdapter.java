@@ -21,7 +21,7 @@ public class UserAdapter extends ArrayAdapter<GWEEUser> {
 
     Context context;
     int resource;
-    ArrayList<GWEEUser> userList;
+    ArrayList<GWEEUser> userList,tempList;
 
     public UserAdapter(Context context, int resource, ArrayList<GWEEUser> userList) {
         super(context, resource, userList);
@@ -29,6 +29,9 @@ public class UserAdapter extends ArrayAdapter<GWEEUser> {
         this.context = context;
         this.resource = resource;
         this.userList = userList;
+
+        tempList = new ArrayList<>();
+        tempList.addAll(userList);
     }
 
     @NonNull
@@ -48,5 +51,24 @@ public class UserAdapter extends ArrayAdapter<GWEEUser> {
 
         return view;
 
+    }
+
+    public void filter(String str){
+
+        // Optimise Search Algo here
+
+        userList.clear();
+
+        if(str.length()==0){
+            userList.addAll(tempList);
+        }else{
+            for(GWEEUser user : tempList){
+                if(user.getName().toLowerCase().contains(str.toLowerCase())){
+                    userList.add(user);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 }
