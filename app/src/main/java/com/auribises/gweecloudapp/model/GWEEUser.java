@@ -1,4 +1,4 @@
-package com.auribises.gweecloudapp;
+package com.auribises.gweecloudapp.model;
 
 import java.io.Serializable;
 

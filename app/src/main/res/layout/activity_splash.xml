@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkgrnd"
-    tools:context="com.auribises.gweecloudapp.SplashActivity">
+    tools:context="com.auribises.gweecloudapp.ui.SplashActivity">
 
 </FrameLayout>

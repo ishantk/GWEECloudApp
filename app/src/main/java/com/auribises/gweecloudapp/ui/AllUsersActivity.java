@@ -1,4 +1,4 @@
-package com.auribises.gweecloudapp;
+package com.auribises.gweecloudapp.ui;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,6 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.auribises.gweecloudapp.model.GWEEUser;
+import com.auribises.gweecloudapp.R;
+import com.auribises.gweecloudapp.adapter.UserAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

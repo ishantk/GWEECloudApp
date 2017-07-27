@@ -1,10 +1,12 @@
-package com.auribises.gweecloudapp;
+package com.auribises.gweecloudapp.ui;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.auribises.gweecloudapp.R;
 
 public class SplashActivity extends AppCompatActivity {
 

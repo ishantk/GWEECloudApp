@@ -1,4 +1,4 @@
-package com.auribises.gweecloudapp;
+package com.auribises.gweecloudapp.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.auribises.gweecloudapp.model.GWEEUser;
+import com.auribises.gweecloudapp.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
@@ -67,6 +70,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
     ProgressDialog dialog;
 
     boolean updateMode;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +146,8 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
 
         switch (id){
             case R.id.buttonRegister:
+
+                token = FirebaseInstanceId.getInstance().getToken();
 
                 user.setName(eTxtName.getText().toString().trim());
                 user.setEmail(eTxtEmail.getText().toString().trim());
@@ -232,6 +238,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                 map.put("password",user.getPassword());
                 map.put("gender",user.getGender());
                 map.put("city",user.getCity());
+                map.put("token",token);
 
                 return map;
             }
