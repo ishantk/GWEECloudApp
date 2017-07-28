@@ -59,13 +59,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void handleDataMessage(JSONObject json) {
+        try {
+            String message = json.getString("message");
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("From Apna Server")
+                    .setContentText(message);
 
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(101, notificationBuilder.build());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void handleNotification(String message) {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Title")
+                    .setContentTitle("From Firebase")
                     .setContentText(message);
 
             NotificationManager notificationManager =
